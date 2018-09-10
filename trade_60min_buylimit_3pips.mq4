@@ -28,10 +28,10 @@ void OnStart()
    int total = OrdersTotal();
    int PendingBuyLimitOrders=0;
    int PendingSellLimitOrders=0;      
-   do {
+//   do {
       if(total<2){
-         //Count Pending BuyLimit Orders
-         for(int i=0;i<OrdersTotal(); i++ )
+         //Count Pending Orders
+         for(int i=0;i<total; i++ )
          {
             if(OrderSelect(i, SELECT_BY_POS)==true){
                if (OrderType()==OP_BUYLIMIT)
@@ -48,8 +48,9 @@ void OnStart()
       
          //OrderSend(symbol,OP,vol,price,SLP,SL,TP,comment,magic,expiration,arrow_color);  
      } 
-   }
-   while (startime<2);
+
+//   }
+//   while (startime<2);
     
    //OrderSend(symbol,OP,vol,price,SLP,SL,TP,comment,magic,expiration,arrow_color);  
   }
