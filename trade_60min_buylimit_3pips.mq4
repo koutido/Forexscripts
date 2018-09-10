@@ -20,6 +20,7 @@ void OnStart()
    int magic=0; // magic number
    datetime expiration=0; // pending order expiration
    color arrow_color=Green; // color
+<<<<<<< HEAD
    
    do {
       int total = OrdersTotal();
@@ -28,6 +29,34 @@ void OnStart()
       } 
    }
    while (startime<30);
+=======
+
+   int total = OrdersTotal();
+   int PendingBuyLimitOrders=0;
+   int PendingSellLimitOrders=0;      
+   do {
+      if(total<2){
+         //Count Pending BuyLimit Orders
+         for(int i=0;i<OrdersTotal(); i++ )
+         {
+            if(OrderSelect(i, SELECT_BY_POS)==true){
+               if (OrderType()==OP_BUYLIMIT)
+                  PendingBuyLimitOrders++;
+               if (OrderType()==OP_SELLLIMIT)
+                  PendingSellLimitOrders++;   
+            }
+         }
+        
+         MessageBox(PendingBuyLimitOrders, "Total pending buylimit orders");
+         MessageBox(PendingSellLimitOrders, "Total pending selllimit orders");
+         
+   
+      
+         //OrderSend(symbol,OP,vol,price,SLP,SL,TP,comment,magic,expiration,arrow_color);  
+     } 
+   }
+   while (startime<2);
+>>>>>>> parent of 02bf8a8... updated
     
    //OrderSend(symbol,OP,vol,price,SLP,SL,TP,comment,magic,expiration,arrow_color);  
   }
