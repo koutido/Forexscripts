@@ -34,22 +34,24 @@ void OnStart()
    //int total = OrdersTotal();
    int PendingBuyLimitOrders=0;
    int PendingSellLimitOrders=0; 
-   int total = OrdersTotal();
+   //int total = OrdersTotal();
    
-   OrderSend(symbol,o_sell,vol,p_sell,SLP,sl_sell,tp_sell,comment,magic,expiration,sell_color);
-   OrderSend(symbol,o_buy,vol,p_buy,SLP,sl_buy,tp_buy,comment,magic,expiration,buy_color);
+   //OrderSend(symbol,o_sell,vol,p_sell,SLP,sl_sell,tp_sell,comment,magic,expiration,sell_color);
+   //OrderSend(symbol,o_buy,vol,p_buy,SLP,sl_buy,tp_buy,comment,magic,expiration,buy_color);
    
-   /*     
+   //MessageBox(total,"Total orders");
+   
+       
    do {
-      
-      if(OrdersTotal()<2){
+      int total = OrdersTotal();
+      if(total<2){
          //Count Pending BuyLimit Orders
-         for(int i=0;i<OrdersTotal(); i++ )
+         for(int i=0;i<total; i++ )
          {
             if(OrderSelect(i, SELECT_BY_POS)==true){
                //MessageBox(PendingBuyLimitOrders, "Total pending buylimit orders");               
                if (OrderType()==OP_BUYLIMIT)
-                  PendingBuyLimitOrders++;
+                  PendingBuyLimitOrders=PendingBuyLimitOrders+1;
                   MessageBox(PendingBuyLimitOrders, "Total pending buylimit orders");
                if (OrderType()==OP_SELLLIMIT)
                   PendingSellLimitOrders++; 
@@ -57,7 +59,7 @@ void OnStart()
                   
             }
          }
-      
+      /*
          if (PendingSellLimitOrders==0)
             {
             //OrderSend(symbol,o_sell,vol,p_sell,SLP,sl_sell,tp_sell,comment,magic,expiration,arrow_color);            
@@ -71,7 +73,7 @@ void OnStart()
             PendingBuyLimitOrders++;
             //MessageBox(PendingBuyLimitOrders, "Total pending buylimit orders");
             } 
-         
+        */ 
         
          //MessageBox(PendingBuyLimitOrders, "Total pending buylimit orders");
          //MessageBox(PendingSellLimitOrders, "Total pending selllimit orders");
@@ -85,7 +87,7 @@ void OnStart()
     
    //OrderSend(symbol,OP,vol,price,SLP,SL,TP,comment,magic,expiration,arrow_color);  
    
- */
+
   }
   
   

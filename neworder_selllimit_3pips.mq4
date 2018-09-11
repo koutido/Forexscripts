@@ -4,7 +4,7 @@ void OnStart()
    string symbol=Symbol(); // symbol
    int o_sell=OP_SELLLIMIT;   
    double vol=0.02; // volume
-   double p_sell=1.15880;   
+   double p_sell=1.15840;   
    int SLP=2; // slippage
    double sl_sell=p_sell+0.0006;   
    double tp_sell=p_sell-0.0003;
