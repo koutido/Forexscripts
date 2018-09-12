@@ -11,29 +11,14 @@
 //| Script program start function                                    |
 //+------------------------------------------------------------------+
 void OnStart()
-  {
+ {
 //---
-   double profit;
-   for(int i=0;i<OrdersTotal(); i++ )
-   {
-      int type   = OrderType();
-      bool result = false;
-      if(OrderSelect(i, SELECT_BY_POS)==true)
-      {
-         profit=OrderProfit();
-         if(profit<0.15)
-            switch(type)
-            {
-               //Close opened long positions
-               case OP_BUY       : OrderClose( OrderTicket(), OrderLots(), MarketInfo(OrderSymbol(), MODE_BID), 2, Green );
-                                   break;     
-               //Close opened short positions
-               case OP_SELL      : OrderClose( OrderTicket(), OrderLots(), MarketInfo(OrderSymbol(), MODE_ASK), 2, Red );
-                                   break;
-                          
-            }
-      }
-        
-   }
-  }
+   //double info=MarketInfo(OrderSymbol(),MODE_TICKSIZE);
+   double m5high=iHigh(OrderSymbol(),PERIOD_M5,0);
+   double m5low=iLow(OrderSymbol(),PERIOD_M5,0);
+   Alert("M5 low: ",m5low);
+   Alert("M5 high: ",m5high);
+   //info=MarketInfo(OrderSymbol(),MODE_ASK);
+   //Alert("Info ask: ",info);
+ }
 //+------------------------------------------------------------------+
