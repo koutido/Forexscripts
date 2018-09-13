@@ -14,11 +14,13 @@ void OnStart()
  {
 //---
    //double info=MarketInfo(OrderSymbol(),MODE_TICKSIZE);
-   double m5high=iHigh(OrderSymbol(),PERIOD_M5,0);
-   double m5low=iLow(OrderSymbol(),PERIOD_M5,0);
-   Alert("M5 low: ",m5low);
-   Alert("M5 high: ",m5high);
+   double high=iHigh(OrderSymbol(),PERIOD_M5,3);
+   double low=iLow(OrderSymbol(),PERIOD_M5,3);
+   Alert("M5 low: ",low);
+   Alert("M5 high: ",high);
    //info=MarketInfo(OrderSymbol(),MODE_ASK);
    //Alert("Info ask: ",info);
+   double candle=high-low;
+   Alert("Longueur de la bougie: ",candle);
  }
 //+------------------------------------------------------------------+
