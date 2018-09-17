@@ -26,9 +26,9 @@ void OnStart()
    //Alert("m5: ",PERIOD_M5);
    //Alert("Expiration time: ",TimeCurrent()+10);
    datetime future=TimeCurrent()+120;
-   Alert("Time to int: ",TimeSeconds(TimeCurrent()));
-   Alert("Time to int in 2 minutes: ",future);
-   Alert("Time to int in 2 minutes: ",TimeSeconds(future));
+   Alert("Current time ",TimeCurrent());
+   Alert("2 minutes later: ",future);
+   //Alert("Time to int in 2 minutes: ",TimeSeconds(future));
    
    
  }
