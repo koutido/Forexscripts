@@ -25,11 +25,53 @@ void OnStart()
    //Alert("Current time: ",TimeCurrent());
    //Alert("m5: ",PERIOD_M5);
    //Alert("Expiration time: ",TimeCurrent()+10);
-   datetime future=TimeCurrent()+120;
-   Alert("Time to int: ",TimeSeconds(TimeCurrent()));
-   Alert("Time to int in 2 minutes: ",future);
-   Alert("Time to int in 2 minutes: ",TimeSeconds(future));
+   //datetime future=TimeCurrent()+120;
+   //Alert("Time to int: ",TimeSeconds(TimeCurrent()));
+   //Alert("Time to int in 2 minutes: ",future);
+   //Alert("Time to int in 2 minutes: ",TimeSeconds(future));
    
+   int total = OrdersTotal();
+   //int startime=Seconds();
+
+   datetime open=TimeCurrent();
+   datetime close=open+10;
+   int stop=1;
+  
+   //int startime=TimeMinute(TimeLocal());  
+   int stoptime=TimeMinute(TimeLocal())+1;   
+   //Alert("Stop in: ",stoptime +"minutes"); 
+      
+      //Alert("Stop time: ",close);
+      //if(TimeCurrent()==close)
+      //{
+         //stop=0;
+      //   Alert("stop time!"); 
+      //}
+  
+
+ 
+      for(int i=0;i<total; i++ )
+         {
+            if(OrderSelect(i, SELECT_BY_POS)==true){
+               int Ticket=OrderTicket();
+               if (OrderType()==OP_BUYLIMIT)
+                  Alert("Order open time: ",OrderOpenTime()+120);
+                  //PendingBuyLimitOrders++;
+                  //Alert("open time: ",open);
+                  //Alert("close time: ",close);
+                  //if(open==close)
+                  //   OrderDelete(Ticket);
+               if (OrderType()==OP_SELLLIMIT)
+                  Alert("Order open time: ",OrderOpenTime()+120);
+                  //PendingSellLimitOrders++; 
+                  //Alert("open time: ",open);
+                  //Alert("close time: ",close);
+                  //if(open==close)
+                  //   OrderDelete(Ticket);  
+            }
+         }
+  
+
    
  }
 //+------------------------------------------------------------------+
