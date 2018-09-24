@@ -1,12 +1,11 @@
 // this function return up when the market is up
 // and it return down when the market is down
-string analyse_market() 
+string analyse_market(string symbol) 
 {
-   // actual buy and sell price
-   double a_sell_price=MarketInfo(OrderSymbol(),MODE_ASK);
-   double a_buy_price=MarketInfo(OrderSymbol(),MODE_BID); 
+   //symbol=OrderSymbol();
+   //symbol=SymbolName(1,true);
    // actual low and high price in M5
-   double max_m5_0=iHigh(OrderSymbol(),PERIOD_M5,0);
+   double max_m5_0=iHigh(symbol,PERIOD_M5,0);
    double min_m5_0=iLow(OrderSymbol(),PERIOD_M5,0);
    // low and high price 5 minutes before
    double max_m5_1=iHigh(OrderSymbol(),PERIOD_M5,1);
@@ -53,11 +52,15 @@ string analyse_market()
             return "up";
       }
    }
+   return "unknown";
 }
 
 void OnStart()
 {
-   string tendency=analyse_market();
+   //string symbol=OrderSymbol();
+   string symbol=SymbolName(2,true);
+   string tendency=analyse_market(symbol);
+   Alert("Market : ", symbol);
    Alert("Market tendency: ", tendency);
 }
 //+------------------------------------------------------------------+
