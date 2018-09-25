@@ -87,9 +87,9 @@ void OnStart()
    double p_sell=Bid;   
    int SLP=0; // slippage   
    double sl_buy=p_buy-0.00080; // stop loss
-   double tp_buy=p_buy+0.00020; // take profit    
+   double tp_buy=p_buy+0.00025; // take profit    
    double sl_sell=p_sell+0.00080; 
-   double tp_sell=p_sell-0.00020;   
+   double tp_sell=p_sell-0.00025;   
    string comment=NULL; // comment
    int magic=0; // magic number
    datetime expiration=0; // pending order expiration
