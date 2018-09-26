@@ -68,6 +68,60 @@ string analyse_market(string symbol)
    return "unknown";
 }
 
+// function to check if the market is volatile
+bool is_volatile(string symbol)
+{
+   // actual low and high price in M5
+   double max_0=iHigh(symbol,PERIOD_M5,0);
+   double min_0=iLow(symbol,PERIOD_M5,0);
+   double candle=max_0-min_0;
+   if(candle>=9)
+      return true;
+   else
+      return false;
+}
+
+// this function check pending order time
+// it close pending order which has opentime >= 5 minutes
+bool check_and_close(int a)
+{
+      if(OrderSelect(a, SELECT_BY_POS)==true)
+      {
+         datetime open_time=OrderOpenTime();
+         datetime close_time=open_time+300;
+         //Alert("Order open time: ",open_time);
+         //Alert("Order close time: ",close_time);
+         
+         // opentime reaches 5 min
+         if(TimeCurrent()>=close_time)
+         {
+            Alert("Order can be deleted. Deleting ...");
+            int ticket=OrderTicket();
+            bool deleted=OrderDelete(ticket);                      
+            if(deleted==true){
+               Alert("Order deleted");
+               return true;                           
+            }
+            else{
+               Alert("Impossible to delete order: ",GetLastError());
+               return false;
+            }            
+         }
+         // opentime doesn't reach 5 min
+         else
+         {
+            Alert("Order can't be deleted now");
+            return false;   
+         }         
+      }
+      else
+      {
+         Alert("No order found: ",GetLastError());
+         return false;
+      }
+}
+
+
 // ##########################################################
 
 void OnStart()
@@ -157,8 +211,58 @@ void OnStart()
             if(tendency=="unknown")
                Alert("Tendency can't be defined");          
          }
+         // there is 1 order, we have to check the type
          if(total==1)
          {
+            if(OrderSelect(0, SELECT_BY_POS)==true)
+               int order_type=OrderType();
+            // existed order is buy or sell order
+            if(order_type==0 || order_type==1)
+            {
+               bool volatile=is_volatile(symbol);
+               // market is volatile, open a direct order
+               if(volatile==true)
+               {
+                  // check tendency and open an order
+                  string tendency=analyse_market(symbol);
+                  if(tendency=="up")
+                  {
+                     Alert("Market is up. Open buy order");
+                     ticket_buy=OrderSend(symbol,o_buy,vol,p_buy,SLP,sl_buy,tp_buy,comment,magic,expiration,buy_color);
+                     if(ticket_buy<0)
+                     {
+                        Alert("[total=1] Buy order Error: ", GetLastError());
+                     }
+                     else
+                     {
+                        Alert("[total=1] Buy order Sent Successfully, Ticket # is: " + string(ticket_buy));  
+                     }               
+                  }
+                  if(tendency=="down")
+                  { 
+                     ticket_sell=OrderSend(symbol,o_sell,vol,p_sell,SLP,sl_sell,tp_sell,comment,magic,expiration,sell_color);
+                     if(ticket_sell<0)
+                     {
+                        Alert("[total=1] Sell order Error: ", GetLastError());
+                     }
+                     else
+                     {
+                        Alert("[total=1] Sell order Sent Successfully, Ticket # is: " + string(ticket_sell));  
+                     }
+                  } 
+                  if(tendency=="unknown")
+                     Alert("[total=2] Tendency can't be defined");
+                }
+                if(volatile==false)
+                {
+                
+                }        
+            }
+            // existed order is a pending order
+            if(order_type==2 || order_type==3 || order_type==4 || order_type==5)
+            {
+            
+            }
          
          }
          
