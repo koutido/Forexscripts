@@ -85,8 +85,12 @@ bool is_volatile(string symbol)
 // it close pending order which has opentime >= 5 minutes
 bool check_and_close(int a)
 {
-      if(OrderSelect(a, SELECT_BY_POS)==true)
-      {
+   if(OrderSelect(a, SELECT_BY_POS)==true)
+   {
+      int order_type=OrderType();
+      // check only pending order
+      if(order_type==2 || order_type==3 || order_type==4 || order_type==5)
+      {         
          datetime open_time=OrderOpenTime();
          datetime close_time=open_time+300;
          //Alert("Order open time: ",open_time);
@@ -112,13 +116,20 @@ bool check_and_close(int a)
          {
             Alert("Order can't be deleted now");
             return false;   
-         }         
+         }
+      
       }
+      // direct order
       else
-      {
-         Alert("No order found: ",GetLastError());
+         Alert("We don't close direct order");
          return false;
-      }
+               
+   }
+   else
+   {
+      Alert("No order found: ",GetLastError());
+      return false;
+   }
 }
 
 
@@ -127,7 +138,7 @@ bool check_and_close(int a)
 void OnStart()
 {
    datetime starttime=TimeLocal();      
-   datetime stoptime=starttime+30;
+   datetime stoptime=starttime+300;
    int stop=1;
 
    int ticket_sell;
@@ -155,9 +166,11 @@ void OnStart()
 // ################## variables in while loop ################
       // number of placed orders
       int total = OrdersTotal();
-      
-      
-      
+      double p_max=iHigh(symbol,PERIOD_M5,0)-0.00010;
+      double p_min=iLow(symbol,PERIOD_M5,0)+0.00010;
+      //double actual_buy=Ask;
+      //double actual_sell=Bid;
+
             
 // ###########################################################
 
@@ -168,9 +181,19 @@ void OnStart()
          Alert("Time up");
          break;
       }
-      // do anything when there are 2 orders or more
+      // when there are 2 orders or more, delete old order
       if(total>=2)
       {
+         //Check and close old order
+         bool order_deleted;
+         for(int i=0;i<total; i++ )
+         {
+            order_deleted=check_and_close(i);
+            if(order_deleted==true)
+               Alert("[total=2] Pending order deleted");
+            else
+               Alert("[total=2] Pending order isn't deleted");
+         }
          Alert("Sleeping 10 secondes");     
          Sleep(10000);      
       }
@@ -225,7 +248,7 @@ void OnStart()
                if(volatile==true)
                {
                   // check tendency and open an order
-                  string tendency=analyse_market(symbol);
+                  tendency=analyse_market(symbol);
                   if(tendency=="up")
                   {
                      Alert("Market is up. Open buy order");
@@ -259,30 +282,58 @@ void OnStart()
                 if(volatile==false)
                 {
                   // check market price to avoid error when open pending order
-                  double p_max=iHigh(symbol,PERIOD_M5,0);
-                  double p_min=iLow(symbol,PERIOD_M5,0);
-                  double actual_buy=Ask;
-                  double actual_sell=Bid;
-                  // 1 pip between order price and actual price
-                  double buy_order_price
+                  // define the pending buy order price
+                  Alert("Price max: ",p_max);
+                  Alert("Price min: ",p_min);
+                  Alert("Actual buy price: ",p_buy+0.00010);
+                  Alert("Actual sell price: ",p_sell+0.00010);
+
+                  double buy_p_order_price;
+                  double sell_p_order_price;
                   
+                  if(p_min<p_buy)
+                     buy_p_order_price=p_min;
+                  else
+                     buy_p_order_price=p_buy;
+                  // define the pending sell order price
+                  if(p_max>p_sell)
+                     sell_p_order_price=p_max;
+                  else
+                     sell_p_order_price=p_sell;
+                  
+                  // stop lost and take profit for pending orders
+                  double sl_p_buy_order=buy_p_order_price-0.00080;
+                  double sl_p_sell_order=sell_p_order_price+0.00080;
+                  double tp_p_buy_order=buy_p_order_price+0.00025;
+                  double tp_p_sell_order=sell_p_order_price-0.00025;
+                  
+                  tendency=analyse_market(symbol);                     
                   if(tendency=="up")
                   {
                      Alert("[total==1,volatile==false] Market is up. Open buy order");
                      
-                     ticket_buy=OrderSend(symbol,OP_BUYLIMIT,vol,min,SLP,sl_buy,tp_buy,comment,magic,expiration,buy_color);                        
+                     ticket_buy=OrderSend(symbol,OP_BUYLIMIT,vol,buy_p_order_price,SLP,sl_p_buy_order,tp_p_buy_order,comment,magic,expiration,buy_color);                        
                      if(ticket_buy<0)
                      {
-                        Alert("[total==1,volatile==false] Buy order Error: ", GetLastError());
+                        Alert("[total==1,volatile==false] Buy pending order Error: ", GetLastError());
                      }
                      else
                      {
-                        Alert("[total==1,volatile==false] Buy order Sent Successfully, Ticket # is: " + string(ticket_buy));  
+                        Alert("[total==1,volatile==false] Buy pending order Sent Successfully, Ticket # is: " + string(ticket_buy));  
                      }
                   }
                   if(tendency=="down")
                   { 
                      Alert("[total==1,volatile==false] Market is down. Open sell order");
+                     ticket_sell=OrderSend(symbol,OP_SELLLIMIT,vol,sell_p_order_price,SLP,sl_p_sell_order,tp_p_sell_order,comment,magic,expiration,sell_color);
+                     if(ticket_sell<0)
+                     {
+                        Alert("[total==1,volatile==false] Sell pending order Error: ", GetLastError());
+                     }
+                     else
+                     {
+                        Alert("[total==1,volatile==false] Sell pending order Sent Successfully, Ticket # is: " + string(ticket_sell));  
+                     }
                   }
                   if(tendency=="unknown")
                      Alert("[total==1,volatile==false] Tendency can't be defined");  
@@ -291,7 +342,36 @@ void OnStart()
             // existed order is a pending order
             if(order_type==2 || order_type==3 || order_type==4 || order_type==5)
             {
-            
+               // check market tendency and open a direct order
+               tendency=analyse_market(symbol);
+               if(tendency=="up")
+               {
+                  Alert("Market is up. Open buy order");
+                  ticket_buy=OrderSend(symbol,o_buy,vol,p_buy,SLP,sl_buy,tp_buy,comment,magic,expiration,buy_color);
+                  if(ticket_buy<0)
+                  {
+                     Alert("[total==1,volatile==false] Buy order Error: ", GetLastError());
+                  }
+                  else
+                  {
+                     Alert("[total==1,volatile==false] Buy order Sent Successfully, Ticket # is: " + string(ticket_buy));  
+                  }               
+               }
+               if(tendency=="down")
+               {
+                  Alert("[total=1,volatile==false] Market is down. Open sell order");
+                  ticket_sell=OrderSend(symbol,o_sell,vol,p_sell,SLP,sl_sell,tp_sell,comment,magic,expiration,sell_color);
+                  if(ticket_sell<0)
+                  {
+                     Alert("[total=1,volatile==false] Sell order Error: ", GetLastError());
+                  }
+                  else
+                  {
+                     Alert("[total=1,volatile==false] Sell order Sent Successfully, Ticket # is: " + string(ticket_sell));  
+                  }
+               } 
+               if(tendency=="unknown")
+                  Alert("[total=1,volatile==false] Tendency can't be defined");     
             }
          
          }
