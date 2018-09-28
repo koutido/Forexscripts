@@ -148,8 +148,8 @@ void OnStart()
    int o_buy=OP_BUY; // operation OP_BUY   
    int o_sell=OP_SELL;   
    double vol=0.02; // volume   
-   double p_buy=Ask;   
-   double p_sell=Bid;   
+   double p_buy=NormalizeDouble(Ask,Digits);   
+   double p_sell=NormalizeDouble(Bid,Digits);   
    int SLP=0; // slippage   
    double sl_buy=p_buy-0.00080; // stop loss
    double tp_buy=p_buy+0.00025; // take profit    
