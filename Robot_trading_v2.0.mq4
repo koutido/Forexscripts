@@ -138,7 +138,7 @@ bool check_and_close(int a)
 void OnStart()
 {
    datetime starttime=TimeLocal();      
-   datetime stoptime=starttime+300;
+   datetime stoptime=starttime+600;
    int stop=1;
 
    int ticket_sell;
@@ -147,14 +147,9 @@ void OnStart()
    string symbol=SymbolName(0,true);
    int o_buy=OP_BUY; // operation OP_BUY   
    int o_sell=OP_SELL;   
-   double vol=0.02; // volume   
-   double p_buy=NormalizeDouble(Ask,Digits);   
-   double p_sell=NormalizeDouble(Bid,Digits);   
+   double vol=0.02; // volume     
    int SLP=0; // slippage   
-   double sl_buy=p_buy-0.00080; // stop loss
-   double tp_buy=p_buy+0.00025; // take profit    
-   double sl_sell=p_sell+0.00080; 
-   double tp_sell=p_sell-0.00025;   
+   
    string comment=NULL; // comment
    int magic=0; // magic number
    datetime expiration=0; // pending order expiration
@@ -170,6 +165,12 @@ void OnStart()
       double p_min=iLow(symbol,PERIOD_M5,0)+0.00010;
       //double actual_buy=Ask;
       //double actual_sell=Bid;
+      double p_buy=NormalizeDouble(Ask,Digits);   
+      double p_sell=NormalizeDouble(Bid,Digits);   
+      double sl_buy=p_buy-0.00080; // stop loss
+      double tp_buy=p_buy+0.00025; // take profit    
+      double sl_sell=p_sell+0.00080; 
+      double tp_sell=p_sell-0.00025;
 
             
 // ###########################################################
