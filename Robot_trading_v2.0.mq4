@@ -189,15 +189,16 @@ void OnStart()
                ticket_buy=OrderSend(symbol,o_buy,vol,p_buy,SLP,sl_buy,tp_buy,comment,magic,expiration,buy_color);
                if(ticket_buy<0)
                {
-                  Alert("[total=0] Buy order Error: ", GetLastError());
+                  Alert("[total==0] Buy order Error: ", GetLastError());
                }
                else
                {
-                  Alert("[total=0] Buy order Sent Successfully, Ticket # is: " + string(ticket_buy));  
+                  Alert("[total==0] Buy order Sent Successfully, Ticket # is: " + string(ticket_buy));  
                }               
             }
             if(tendency=="down")
-            { 
+            {
+               Alert("Market is down. Open sell order");
                ticket_sell=OrderSend(symbol,o_sell,vol,p_sell,SLP,sl_sell,tp_sell,comment,magic,expiration,sell_color);
                if(ticket_sell<0)
                {
@@ -231,31 +232,60 @@ void OnStart()
                      ticket_buy=OrderSend(symbol,o_buy,vol,p_buy,SLP,sl_buy,tp_buy,comment,magic,expiration,buy_color);
                      if(ticket_buy<0)
                      {
-                        Alert("[total=1] Buy order Error: ", GetLastError());
+                        Alert("[total==1,volatile==true] Buy order Error: ", GetLastError());
                      }
                      else
                      {
-                        Alert("[total=1] Buy order Sent Successfully, Ticket # is: " + string(ticket_buy));  
+                        Alert("[total==1,volatile==true] Buy order Sent Successfully, Ticket # is: " + string(ticket_buy));  
                      }               
                   }
                   if(tendency=="down")
-                  { 
+                  {
+                     Alert("Market is down. Open sell order");
                      ticket_sell=OrderSend(symbol,o_sell,vol,p_sell,SLP,sl_sell,tp_sell,comment,magic,expiration,sell_color);
                      if(ticket_sell<0)
                      {
-                        Alert("[total=1] Sell order Error: ", GetLastError());
+                        Alert("[total==1,volatile==true] Sell order Error: ", GetLastError());
                      }
                      else
                      {
-                        Alert("[total=1] Sell order Sent Successfully, Ticket # is: " + string(ticket_sell));  
+                        Alert("[total==1,volatile==true] Sell order Sent Successfully, Ticket # is: " + string(ticket_sell));  
                      }
                   } 
                   if(tendency=="unknown")
-                     Alert("[total=2] Tendency can't be defined");
+                     Alert("[total==1,volatile==true] Tendency can't be defined");
                 }
+                // market isn't volatile, open a pending order
                 if(volatile==false)
                 {
-                
+                  // check market price to avoid error when open pending order
+                  double p_max=iHigh(symbol,PERIOD_M5,0);
+                  double p_min=iLow(symbol,PERIOD_M5,0);
+                  double actual_buy=Ask;
+                  double actual_sell=Bid;
+                  // 1 pip between order price and actual price
+                  double buy_order_price
+                  
+                  if(tendency=="up")
+                  {
+                     Alert("[total==1,volatile==false] Market is up. Open buy order");
+                     
+                     ticket_buy=OrderSend(symbol,OP_BUYLIMIT,vol,min,SLP,sl_buy,tp_buy,comment,magic,expiration,buy_color);                        
+                     if(ticket_buy<0)
+                     {
+                        Alert("[total==1,volatile==false] Buy order Error: ", GetLastError());
+                     }
+                     else
+                     {
+                        Alert("[total==1,volatile==false] Buy order Sent Successfully, Ticket # is: " + string(ticket_buy));  
+                     }
+                  }
+                  if(tendency=="down")
+                  { 
+                     Alert("[total==1,volatile==false] Market is down. Open sell order");
+                  }
+                  if(tendency=="unknown")
+                     Alert("[total==1,volatile==false] Tendency can't be defined");  
                 }        
             }
             // existed order is a pending order
