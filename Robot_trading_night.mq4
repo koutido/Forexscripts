@@ -138,7 +138,7 @@ bool check_and_close(int a)
 void OnStart()
 {
    datetime starttime=TimeLocal();      
-   datetime stoptime=starttime+600;
+   datetime stoptime=starttime+3600;
    int stop=1;
 
    int ticket_sell;
@@ -165,8 +165,8 @@ void OnStart()
       double p_min=iLow(symbol,PERIOD_M5,0)+0.00010;
       //double actual_buy=Ask;
       //double actual_sell=Bid;
-      double p_buy=NormalizeDouble(Ask,Digits);   
-      double p_sell=NormalizeDouble(Bid,Digits);   
+      double p_buy=Ask;   
+      double p_sell=Bid;   
       double sl_buy=p_buy-0.00080; // stop loss
       double tp_buy=p_buy+0.00025; // take profit    
       double sl_sell=p_sell+0.00080; 
