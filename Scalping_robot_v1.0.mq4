@@ -1,3 +1,7 @@
+#property show_inputs
+input double resistance;
+input double support;
+
 void OnStart()
 {
    datetime starttime=TimeLocal();      
@@ -21,13 +25,13 @@ void OnStart()
    
    while(stop==1)
    {
-      double resistance=1.14555; // resistance level
-      double support=1.14545; // support level
+      //double resistance=1.14555; // resistance level
+      //double support=1.14545; // support level
       int total = OrdersTotal();
-      //double price_buy=Ask;
-      //double price_sell=Bid;
-      double price_sell = MarketInfo("EURUSD",MODE_BID);
-      double price_buy = MarketInfo("EURUSD",MODE_ASK);
+      double price_buy=Ask;
+      double price_sell=Bid;
+      //double price_sell = MarketInfo("EURUSD",MODE_BID);
+      //double price_buy = MarketInfo("EURUSD",MODE_ASK);
       
       double sl_buy=NormalizeDouble(price_buy-0.00060,Digits); // stop loss
       //double tp_buy=NormalizeDouble(p_buy+0.00035,Digits); // take profit    
@@ -44,8 +48,8 @@ void OnStart()
       
       if(total<1)
       {
-         Alert("price buy", price_buy);
-         Alert("price sell", price_sell);         
+         Alert("price buy: ", price_buy);
+         Alert("price sell: ", price_sell);         
          if(price_sell<=resistance)
             if(price_sell>resistance-0.00005)
             {
