@@ -28,10 +28,10 @@ void OnStart()
       //double resistance=1.14555; // resistance level
       //double support=1.14545; // support level
       int total = OrdersTotal();
-      double price_buy=Ask;
-      double price_sell=Bid;
-      //double price_sell = MarketInfo("EURUSD",MODE_BID);
-      //double price_buy = MarketInfo("EURUSD",MODE_ASK);
+      //double price_buy=Ask;
+      //double price_sell=Bid;
+      double price_sell = MarketInfo("EURUSD",MODE_ASK);
+      double price_buy = MarketInfo("EURUSD",MODE_BID);
       
       double sl_buy=NormalizeDouble(price_buy-0.00060,Digits); // stop loss
       //double tp_buy=NormalizeDouble(p_buy+0.00035,Digits); // take profit    
@@ -50,8 +50,8 @@ void OnStart()
       {
          Alert("price buy: ", price_buy);
          Alert("price sell: ", price_sell);         
-         if(price_sell<=resistance)
-            if(price_sell>resistance-0.00005)
+         if(price_buy<=resistance)
+            if(price_buy>resistance-0.00005)
             {
                Alert("Open a sell order ...");
                ticket_sell=OrderSend(symbol,o_sell,vol,price_sell,SLP,sl_sell,support,comment,magic,expiration,sell_color);
