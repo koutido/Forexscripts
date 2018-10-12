@@ -33,9 +33,9 @@ void OnStart()
       //double price_sell = MarketInfo("EURUSD",MODE_ASK);
       //double price_buy = MarketInfo("EURUSD",MODE_BID);
       
-      double sl_buy=Ask-0.00040; // stop loss
+      double sl_buy=MarketInfo(symbol,MODE_ASK)-0.00040; // stop loss
       //double tp_buy=NormalizeDouble(p_buy+0.00035,Digits); // take profit    
-      double sl_sell=Bid+0.00040; 
+      double sl_sell=MarketInfo(symbol,MODE_BID)+0.00040; 
       //double tp_sell=NormalizeDouble(p_sell-0.00035,Digits);
       
       //stop programme if current time >= start time + 60s
@@ -52,10 +52,10 @@ void OnStart()
          Alert("price sell: ", MarketInfo(symbol,MODE_BID)); 
          Alert("resistance = ",resistance);  
          Alert("support = ",support);       
-         if(Ask>=resistance)
+         if(MarketInfo(symbol,MODE_ASK)>=resistance)
          {
             Alert("Open a sell order ...");
-            ticket_sell=OrderSend(symbol,o_sell,vol,Bid,SLP,sl_sell,support+0.00010,comment,magic,expiration,sell_color);
+            ticket_sell=OrderSend(symbol,o_sell,vol,MarketInfo(symbol,MODE_BID),SLP,sl_sell,support+0.00010,comment,magic,expiration,sell_color);
             if(ticket_sell<0)
             {
                Alert("Sell order Error: ", GetLastError());
@@ -65,10 +65,10 @@ void OnStart()
                Alert("Sell order Sent Successfully, Ticket # is: " + string(ticket_sell));  
             }
          }
-         if(Bid<=support)
+         if(MarketInfo(symbol,MODE_BID)<=support)
          {
             Alert("Open a buy order ...");
-            ticket_buy=OrderSend(symbol,o_buy,vol,Ask,SLP,sl_buy,resistance-0.00010,comment,magic,expiration,buy_color);
+            ticket_buy=OrderSend(symbol,o_buy,vol,MarketInfo(symbol,MODE_ASK),SLP,sl_buy,resistance-0.00010,comment,magic,expiration,buy_color);
             if(ticket_buy<0)
             {
                Alert("Buy order Error: ", GetLastError());
