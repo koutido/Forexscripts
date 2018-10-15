@@ -8,12 +8,12 @@ void OnStart()
    datetime stoptime=starttime+1800;
    int stop=1;
 
-   int ticket_sell;
+   //int ticket_sell;
    int ticket_buy;
 
    string symbol=SymbolName(0,true);
    int o_buy=OP_BUY;
-   int o_sell=OP_SELL;   
+   //int o_sell=OP_SELL;   
    double vol=0.02;  
    int SLP=0; 
    
@@ -21,7 +21,7 @@ void OnStart()
    int magic=0; // magic number
    datetime expiration=0; // pending order expiration
    color buy_color=Green; // color  
-   color sell_color=Red; // color
+   //color sell_color=Red; // color
    
    while(stop==1)
    {
@@ -35,7 +35,7 @@ void OnStart()
       
       double sl_buy=MarketInfo(symbol,MODE_ASK)-0.00040; // stop loss
       //double tp_buy=NormalizeDouble(p_buy+0.00035,Digits); // take profit    
-      double sl_sell=MarketInfo(symbol,MODE_BID)+0.00040; 
+      //double sl_sell=MarketInfo(symbol,MODE_BID)+0.00040; 
       //double tp_sell=NormalizeDouble(p_sell-0.00035,Digits);
       
       //stop programme if current time >= start time + 60s
@@ -45,7 +45,7 @@ void OnStart()
          Alert("Time up");
          break;
       }     
-      
+      // current price is between resistance and support level
       if(MarketInfo(symbol,MODE_ASK)<= resistance && MarketInfo(symbol,MODE_BID)>= support)
       {
          if(total<1)
@@ -53,20 +53,7 @@ void OnStart()
             Alert("price buy: ", MarketInfo(symbol,MODE_ASK));
             Alert("price sell: ", MarketInfo(symbol,MODE_BID)); 
             Alert("resistance = ",resistance);  
-            Alert("support = ",support);       
-            if(MarketInfo(symbol,MODE_ASK)>=resistance)
-            {
-               Alert("Open a sell order ...");
-               ticket_sell=OrderSend(symbol,o_sell,vol,MarketInfo(symbol,MODE_BID),SLP,sl_sell,support,comment,magic,expiration,sell_color);
-               if(ticket_sell<0)
-               {
-                  Alert("Sell order Error: ", GetLastError());
-               }
-               else
-               {
-                  Alert("Sell order Sent Successfully, Ticket # is: " + string(ticket_sell));  
-               }
-            }
+            Alert("support = ",support);   
             if(MarketInfo(symbol,MODE_BID)<=support)
             {
                Alert("Open a buy order ...");
