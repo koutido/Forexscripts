@@ -46,7 +46,7 @@ void OnStart()
          break;
       }     
       
-      if(MarketInfo(symbol,MODE_ASK)<= resistance && MarketInfo(symbol,MODE_BID)>= support)
+      if(MarketInfo(symbol,MODE_ASK)<= resistance)
       {
          if(total<1)
          {
@@ -57,7 +57,7 @@ void OnStart()
             if(MarketInfo(symbol,MODE_ASK)>=resistance)
             {
                Alert("Open a sell order ...");
-               ticket_sell=OrderSend(symbol,o_sell,vol,MarketInfo(symbol,MODE_BID),SLP,sl_sell,support,comment,magic,expiration,sell_color);
+               ticket_sell=OrderSend(symbol,o_sell,vol,MarketInfo(symbol,MODE_BID),SLP,sl_sell,support+0.00005,comment,magic,expiration,sell_color);
                if(ticket_sell<0)
                {
                   Alert("Sell order Error: ", GetLastError());
@@ -70,7 +70,7 @@ void OnStart()
             if(MarketInfo(symbol,MODE_BID)<=support)
             {
                Alert("Open a buy order ...");
-               ticket_buy=OrderSend(symbol,o_buy,vol,MarketInfo(symbol,MODE_ASK),SLP,sl_buy,resistance,comment,magic,expiration,buy_color);
+               ticket_buy=OrderSend(symbol,o_buy,vol,MarketInfo(symbol,MODE_ASK),SLP,sl_buy,resistance-0.00005,comment,magic,expiration,buy_color);
                if(ticket_buy<0)
                {
                   Alert("Buy order Error: ", GetLastError());

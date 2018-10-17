@@ -46,7 +46,7 @@ void OnStart()
          break;
       }     
       // current price is between resistance and support level
-      if(MarketInfo(symbol,MODE_ASK)<= resistance && MarketInfo(symbol,MODE_BID)>= support)
+      if(MarketInfo(symbol,MODE_ASK)>= support)
       {
          if(total<1)
          {
@@ -57,7 +57,7 @@ void OnStart()
             if(MarketInfo(symbol,MODE_BID)<=support)
             {
                Alert("Open a buy order ...");
-               ticket_buy=OrderSend(symbol,o_buy,vol,MarketInfo(symbol,MODE_ASK),SLP,sl_buy,resistance,comment,magic,expiration,buy_color);
+               ticket_buy=OrderSend(symbol,o_buy,vol,MarketInfo(symbol,MODE_ASK),SLP,sl_buy,resistance-0.00005,comment,magic,expiration,buy_color);
                if(ticket_buy<0)
                {
                   Alert("Buy order Error: ", GetLastError());
