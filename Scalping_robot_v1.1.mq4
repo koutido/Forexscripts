@@ -33,9 +33,9 @@ void OnStart()
       //double price_sell = MarketInfo("EURUSD",MODE_ASK);
       //double price_buy = MarketInfo("EURUSD",MODE_BID);
       
-      double sl_buy=MarketInfo(symbol,MODE_ASK)-0.00040; // stop loss
+      double sl_buy=MarketInfo(symbol,MODE_ASK)-0.00030; // stop loss
       //double tp_buy=NormalizeDouble(p_buy+0.00035,Digits); // take profit    
-      double sl_sell=MarketInfo(symbol,MODE_BID)+0.00040; 
+      double sl_sell=MarketInfo(symbol,MODE_BID)+0.00030; 
       //double tp_sell=NormalizeDouble(p_sell-0.00035,Digits);
       
       //stop programme if current time >= start time + 60s
@@ -46,7 +46,7 @@ void OnStart()
          break;
       }     
       
-      if(MarketInfo(symbol,MODE_ASK)<= resistance)
+      if(MarketInfo(symbol,MODE_ASK)<= resistance && MarketInfo(symbol,MODE_ASK) >= support)
       {
          if(total<1)
          {
