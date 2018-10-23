@@ -27,7 +27,7 @@ void OnStart()
    //double take_profite=NormalizeDouble(o_sell-0.00020,Digits);
    
    Alert("Open a sell order ...");
-   ticket_sell=OrderSend(symbol,o_sell,vol,MarketInfo(symbol,MODE_ASK),SLP,sl_sell,take_profite,comment,magic,expiration,sell_color);
+   ticket_sell=OrderSend(symbol,o_sell,vol,MarketInfo(symbol,MODE_BID),SLP,sl_sell,take_profite,comment,magic,expiration,sell_color);
    if(ticket_sell<0)
    {
       Alert("Sell order Error: ", GetLastError());
