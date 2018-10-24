@@ -33,9 +33,9 @@ void OnStart()
       //double price_sell = MarketInfo("EURUSD",MODE_ASK);
       //double price_buy = MarketInfo("EURUSD",MODE_BID);
       
-      double sl_buy=MarketInfo(symbol,MODE_ASK)-0.00040; // stop loss
+      double sl_buy=MarketInfo(symbol,MODE_ASK)-0.00030; // stop loss
       //double tp_buy=NormalizeDouble(p_buy+0.00035,Digits); // take profit    
-      double sl_sell=MarketInfo(symbol,MODE_BID)+0.00040; 
+      double sl_sell=MarketInfo(symbol,MODE_BID)+0.00030; 
       //double tp_sell=NormalizeDouble(p_sell-0.00035,Digits);
       
       //stop programme if current time >= start time + 60s
@@ -46,7 +46,7 @@ void OnStart()
          break;
       }     
       
-      if(MarketInfo(symbol,MODE_ASK)<= resistance && MarketInfo(symbol,MODE_BID)>= support)
+      if(MarketInfo(symbol,MODE_ASK)<= resistance && MarketInfo(symbol,MODE_ASK) >= support)
       {
          if(total<1)
          {
@@ -57,7 +57,7 @@ void OnStart()
             if(MarketInfo(symbol,MODE_ASK)>=resistance)
             {
                Alert("Open a sell order ...");
-               ticket_sell=OrderSend(symbol,o_sell,vol,MarketInfo(symbol,MODE_BID),SLP,sl_sell,support,comment,magic,expiration,sell_color);
+               ticket_sell=OrderSend(symbol,o_sell,vol,MarketInfo(symbol,MODE_BID),SLP,sl_sell,support+0.00005,comment,magic,expiration,sell_color);
                if(ticket_sell<0)
                {
                   Alert("Sell order Error: ", GetLastError());
@@ -70,7 +70,7 @@ void OnStart()
             if(MarketInfo(symbol,MODE_BID)<=support)
             {
                Alert("Open a buy order ...");
-               ticket_buy=OrderSend(symbol,o_buy,vol,MarketInfo(symbol,MODE_ASK),SLP,sl_buy,resistance,comment,magic,expiration,buy_color);
+               ticket_buy=OrderSend(symbol,o_buy,vol,MarketInfo(symbol,MODE_ASK),SLP,sl_buy,resistance-0.00005,comment,magic,expiration,buy_color);
                if(ticket_buy<0)
                {
                   Alert("Buy order Error: ", GetLastError());

@@ -57,7 +57,7 @@ void OnStart()
             if(MarketInfo(symbol,MODE_ASK)<=support+0.00010)
             {
                Alert("Open a buy order ...");
-               ticket_buy=OrderSend(symbol,o_buy,vol,MarketInfo(symbol,MODE_ASK),SLP,sl_buy,resistance,comment,magic,expiration,buy_color);
+               ticket_buy=OrderSend(symbol,o_buy,vol,MarketInfo(symbol,MODE_ASK),SLP,sl_buy,resistance-0.00005,comment,magic,expiration,buy_color);
                if(ticket_buy<0)
                {
                   Alert("Buy order Error: ", GetLastError());
